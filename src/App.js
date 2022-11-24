@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./components/Login";
+import { Fragment } from "react";
+import Header from "./components/Header";
+import Home from "./components/Home";
+import { getUserAuth } from "../src/actions";
+import { connect } from "react-redux";
+import { useEffect } from "react";
 
-function App() {
+function App(props) {
+  useEffect(() => {
+    props.getAuth();
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />}></Route>
+        </Routes>
+        <Routes>
+          <Route
+            path="/home"
+            element={
+              <Fragment>
+                <Header></Header>
+                <Home></Home>
+              </Fragment>
+            }
+          ></Route>
+        </Routes>
+      </Router>
     </div>
   );
 }
 
-export default App;
+const mapState = (state) => {
+  return {};
+};
+
+const mapDispatch = (dispatch) => {
+  return {
+    getAuth: () => dispatch(getUserAuth),
+  };
+};
+
+export default connect(mapState, mapDispatch)(App);
